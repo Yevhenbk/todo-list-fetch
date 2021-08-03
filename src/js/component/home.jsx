@@ -1,24 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import Task from "./task.jsx";
 
-//include images into your bundle
 import rigoImage from "../../img/rigo-baby.jpg";
 
-//create your first component
 const Home = () => {
+	const [textTask, setTextTask] = useState({ task: "" });
+	const [taskList, setTaskList] = useState([]);
+
+	const sendTextTask = e => {
+		e.preventDefault();
+		setTaskList([...taskList, textTask]);
+		setTextTask({ task: "" });
+	};
+
+	const clickDelete = targetIndex => {
+		setTaskList(taskList.filter((_, index) => index !== targetIndex));
+	};
+
+	let todoList = taskList.map((value, index) => (
+		<Task
+			inputValue={value.task}
+			key={index}
+			onMyClick={() => clickDelete(index)}
+		/>
+	));
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+		<div className="container">
+			<div className="mb-6">
+				<section className="toDoList">
+					<header>Todo App</header>
+					<form className="form" onSubmit={sendTextTask}>
+						<input
+							type="text"
+							value={textTask.task}
+							placeholder="What needs to be done?"
+							onChange={e =>
+								setTextTask({ task: e.target.value })
+							}
+						/>
+					</form>
+				</section>
+				<ul className="list-group-flush">{todoList}</ul>
+				<footer>
+					<span className="footerNum">
+						You have {taskList.length}
+					</span>
+					<span className="footerTask"> pending task(s)</span>
+				</footer>
+			</div>
 		</div>
 	);
 };
