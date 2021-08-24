@@ -1,50 +1,104 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Task from "./task.jsx";
 
-import rigoImage from "../../img/rigo-baby.jpg";
-
 const Home = () => {
-	const [textTask, setTextTask] = useState({ task: "" });
-	const [taskList, setTaskList] = useState([]);
+	const [taskList, setTaskList] = useState({ task: "" });
+	const [listMap, setListMap] = useState([]);
 
-	const sendTextTask = e => {
-		e.preventDefault();
-		setTaskList([...taskList, textTask]);
-		setTextTask({ task: "" });
+	useEffect(() => {
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/Yevhenbk", {
+			method: "GET"
+		})
+			.then(resp => {
+				if (!resp.ok) {
+					throw new Error(resp.statusText);
+				}
+				return resp.json();
+			})
+			.then(data => {
+				setTaskList(data);
+			})
+			.catch(error => {
+				console.log(error, "epa");
+			});
+	}, []);
+
+	useEffect(() => {
+		if (taskList.length) {
+			setListMap(
+				taskList.map((task, index) => {
+					return (
+						<Task
+							text={task}
+							id={index}
+							key={index.toString()}
+							delete={deleteTask}
+						/>
+					);
+				})
+			);
+		}
+	}, [taskList]);
+
+	useEffect(() => {
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/Yevhenbk", {
+			method: "PUT",
+			body: JSON.stringify(taskList),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				if (!resp.ok) {
+					throw Error(resp.statusText);
+				}
+				return resp.json();
+			})
+			.then(data => {
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	}, [taskList]);
+
+	const deleteTask = indexDelete => {
+		setTaskList(taskList.filter((_, index) => index !== indexDelete));
 	};
-
-	const clickDelete = targetIndex => {
-		setTaskList(taskList.filter((_, index) => index !== targetIndex));
-	};
-
-	let todoList = taskList.map((value, index) => (
-		<Task
-			inputValue={value.task}
-			key={index}
-			onMyClick={() => clickDelete(index)}
-		/>
-	));
 	return (
 		<div className="container">
 			<div className="mb-6">
 				<section className="toDoList">
 					<header>Todo App</header>
-					<form className="form" onSubmit={sendTextTask}>
+					<form
+						className="form"
+						onSubmit={event => {
+							event.preventDefault();
+						}}>
 						<input
-							type="text"
-							value={textTask.task}
+							className="col-6 offset-3 rounded"
+							type="tasks"
+							onKeyPress={event => {
+								if (event.key == "Enter") {
+									if (event.key === "Enter") {
+										setTaskList([
+											...taskList,
+											{
+												label: event.target.value,
+												done: false
+											}
+										]);
+										event.currentTarget.value = "";
+									}
+								}
+							}}
 							placeholder="What needs to be done?"
-							onChange={e =>
-								setTextTask({ task: e.target.value })
-							}
 						/>
 					</form>
 				</section>
-				<ul className="list-group-flush">{todoList}</ul>
+				<ul className="list-group-flush">{listMap}</ul>
 				<footer>
-					<span className="footerNum">
-						You have {taskList.length}
-					</span>
+					<span className="footerNum">You have {listMap.length}</span>
 					<span className="footerTask"> pending task(s)</span>
 				</footer>
 			</div>
