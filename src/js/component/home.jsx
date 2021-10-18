@@ -76,7 +76,6 @@ const Home = () => {
 							event.preventDefault();
 						}}>
 						<input
-							className="col-6 offset-3 rounded"
 							type="tasks"
 							onKeyPress={event => {
 								if (event.key == "Enter") {
