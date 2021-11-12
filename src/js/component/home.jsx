@@ -42,7 +42,29 @@ const Home = () => {
 
 	useEffect(() => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/Yevhenbk", {
-			method: "PUT",
+			method: "POST",
+			body: JSON.stringify(taskList),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		})
+			.then(resp => {
+				if (!resp.ok) {
+					throw Error(resp.statusText);
+				}
+				return resp.json();
+			})
+			.then(data => {
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error);
+			});
+	}, [taskList]);
+
+	useEffect(() => {
+		fetch("https://assets.breatheco.de/apis/fake/todos/user/Yevhenbk", {
+			method: "POST",
 			body: JSON.stringify(taskList),
 			headers: {
 				"Content-Type": "application/json"
