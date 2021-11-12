@@ -42,7 +42,7 @@ const Home = () => {
 
 	useEffect(() => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/Yevhenbk", {
-			method: "POST",
+			method: "POST",//originally should be PUT method, as we are using APIs that would work only with changing tasks
 			body: JSON.stringify(taskList),
 			headers: {
 				"Content-Type": "application/json"
@@ -61,6 +61,8 @@ const Home = () => {
 				console.log(error);
 			});
 	}, [taskList]);
+
+	//method DELETE was removed due to working incorrectly with the APIs Im currently using
 
 	useEffect(() => {
 		fetch("https://assets.breatheco.de/apis/fake/todos/user/Yevhenbk", {
