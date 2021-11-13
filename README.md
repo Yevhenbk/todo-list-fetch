@@ -1,6 +1,6 @@
 # To-do list with Fetch
 
-<p>Going over my projects, I'd like to share the to-do list that is synced with the backend API every time a task is added or deleted. This whole project is about asynchronous programming because the interactions from and to the server need to be done async. That way the user does not have to wait for the information to arrive.</p>
+<p> The to-do list that is synced with the backend API every time a task is added or deleted. This whole project is about asynchronous programming because the interactions from and to the server need to be done async. That way the user does not have to wait for the information to arrive.</p>
 
 # React boilerplate
 <p>
